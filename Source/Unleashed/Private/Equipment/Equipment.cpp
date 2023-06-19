@@ -2,7 +2,6 @@
 
 
 #include "Equipment/Equipment.h"
-
 #include "Unleashed/UnleashedCharacter.h"
 
 AEquipment::AEquipment()

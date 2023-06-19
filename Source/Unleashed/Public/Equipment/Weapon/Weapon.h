@@ -13,4 +13,7 @@ UCLASS()
 class UNLEASHED_API AWeapon : public AEquipment
 {
 	GENERATED_BODY()
+
+public:
+	virtual void Equip() override;
 };

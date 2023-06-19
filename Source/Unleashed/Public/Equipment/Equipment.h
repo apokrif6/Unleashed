@@ -14,9 +14,13 @@ class UNLEASHED_API AEquipment : public AActor
 public:
 	AEquipment();
 
-	void Equip();
+	virtual void Equip();
 
 	void Unequip();
+
+	void AttachActorToOwner(FName SocketName);
+
+	FName GetEquipmentAttachedSocketName() const { return AttachSocketName; }
 
 protected:
 	UPROPERTY(EditDefaultsOnly)
@@ -31,8 +35,6 @@ protected:
 	UPrimitiveComponent* GetStaticMesh() const;
 
 	virtual void BeginPlay() override;
-
-	void AttachActorToOwner(FName SocketName);
 
 	bool IsEquipped() const { return bIsEquipped; }
 

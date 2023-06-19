@@ -9,6 +9,8 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
+#include "Interfaces/InteractInterface.h"
+#include "Kismet/KismetSystemLibrary.h"
 
 
 //////////////////////////////////////////////////////////////////////////
@@ -66,16 +68,6 @@ void AUnleashedCharacter::BeginPlay()
 			Subsystem->AddMappingContext(DefaultMappingContext, 0);
 		}
 	}
-
-	UWorld* World = GetWorld();
-	if (!World) return;
-
-	Weapon = World->SpawnActor<AWeapon>(WeaponClass);
-
-	if (!Weapon) return;
-
-	Weapon->SetOwner(this);
-	Weapon->Equip();
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -86,15 +78,17 @@ void AUnleashedCharacter::SetupPlayerInputComponent(class UInputComponent* Playe
 	// Set up action bindings
 	if (UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(PlayerInputComponent))
 	{
-		//Jumping
 		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Triggered, this, &ACharacter::Jump);
 		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &ACharacter::StopJumping);
 
-		//Moving
-		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AUnleashedCharacter::Move);
+		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &ThisClass::Move);
 
-		//Looking
-		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AUnleashedCharacter::Look);
+		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &ThisClass::Look);
+
+		EnhancedInputComponent->BindAction(ToggleCombatModeAction, ETriggerEvent::Triggered, this,
+		                                   &ThisClass::ToggleCombatMode);
+
+		EnhancedInputComponent->BindAction(InteractAction, ETriggerEvent::Triggered, this, &ThisClass::Interact);
 	}
 }
 
@@ -132,4 +126,62 @@ void AUnleashedCharacter::Look(const FInputActionValue& Value)
 		AddControllerYawInput(LookAxisVector.X);
 		AddControllerPitchInput(LookAxisVector.Y);
 	}
+}
+
+void AUnleashedCharacter::ToggleCombatMode(const FInputActionValue& Value)
+{
+	if (!Weapon) return;
+
+	if (bIsWeaponAttachedToHand)
+	{
+		PlayAnimMontage(UnequipWeaponAnimMontage);
+	}
+	else
+	{
+		PlayAnimMontage(EquipWeaponAnimMontage);
+	}
+}
+
+void AUnleashedCharacter::Interact(const FInputActionValue& Value)
+{
+	const UWorld* World = GetWorld();
+	if (!World) return;
+
+	TArray<TEnumAsByte<EObjectTypeQuery>> ObjectTypes;
+	ObjectTypes.Reserve(1);
+	ObjectTypes.Emplace(ECC_EngineTraceChannel1);
+
+	const TArray<AActor*> IgnoredActors;
+	FHitResult HitResult;
+
+	const bool bHitResult = UKismetSystemLibrary::SphereTraceSingleForObjects(
+		World, GetActorLocation(), GetActorLocation(),
+		100.f, ObjectTypes, false, IgnoredActors,
+		EDrawDebugTrace::None, HitResult, true);
+
+	if (!bHitResult) return;
+
+	if (IInteractInterface* InteractInterface = Cast<IInteractInterface>(HitResult.GetActor()))
+	{
+		InteractInterface->Interact(this);
+	}
+}
+
+void AUnleashedCharacter::AttachWeapon()
+{
+	if (bIsWeaponAttachedToHand)
+	{
+		Weapon->AttachActorToOwner(Weapon->GetEquipmentAttachedSocketName());
+	}
+	else
+	{
+		Weapon->AttachActorToOwner(CombatWeaponAttachSocketName);
+	}
+
+	bIsWeaponAttachedToHand = !bIsWeaponAttachedToHand;
+}
+
+void AUnleashedCharacter::SetWeapon(AWeapon* WeaponToSet)
+{
+	Weapon = WeaponToSet;
 }

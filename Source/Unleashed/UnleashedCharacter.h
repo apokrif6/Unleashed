@@ -5,9 +5,11 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "InputActionValue.h"
-#include "Weapon/Weapon.h"
+#include "Equipment/Weapon/Weapon.h"
 #include "UnleashedCharacter.generated.h"
 
+
+class UInputAction;
 
 UCLASS(config=Game)
 class AUnleashedCharacter : public ACharacter
@@ -28,31 +30,51 @@ class AUnleashedCharacter : public ACharacter
 
 	/** Jump Input Action */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
-	class UInputAction* JumpAction;
+	UInputAction* JumpAction;
 
 	/** Move Input Action */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
-	class UInputAction* MoveAction;
+	UInputAction* MoveAction;
 
 	/** Look Input Action */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
-	class UInputAction* LookAction;
+	UInputAction* LookAction;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UInputAction* ToggleCombatModeAction;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UInputAction* InteractAction;
 
 	UPROPERTY()
 	AWeapon* Weapon = nullptr;
-	
+
+	bool bIsWeaponAttachedToHand = false;
+
 public:
 	AUnleashedCharacter();
 
+	void AttachWeapon();
+
+	void SetWeapon(AWeapon* WeaponToSet);
+
 protected:
-	/** Called for movement input */
 	void Move(const FInputActionValue& Value);
 
-	/** Called for looking input */
 	void Look(const FInputActionValue& Value);
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon")
-	TSubclassOf<AWeapon> WeaponClass;
+	void ToggleCombatMode(const FInputActionValue& Value);
+
+	void Interact(const FInputActionValue& Value);
+
+	UPROPERTY(EditDefaultsOnly, Category = "Weapon")
+	FName CombatWeaponAttachSocketName = NAME_None;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Weapon")
+	UAnimMontage* EquipWeaponAnimMontage;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Weapon")
+	UAnimMontage* UnequipWeaponAnimMontage;
 
 protected:
 	// APawn interface
