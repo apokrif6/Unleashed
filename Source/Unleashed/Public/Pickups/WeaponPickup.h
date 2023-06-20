@@ -19,6 +19,6 @@ public:
 	virtual void Interact(AActor* InteractionInstigator) override;;
 
 protected:
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon")
 	TSubclassOf<AWeapon> WeaponToPickup;
 };

@@ -132,13 +132,13 @@ void AUnleashedCharacter::ToggleCombatMode(const FInputActionValue& Value)
 {
 	if (!Weapon) return;
 
-	if (bIsWeaponAttachedToHand)
+	if (Weapon->IsAttachedToHand())
 	{
-		PlayAnimMontage(UnequipWeaponAnimMontage);
+		PlayAnimMontage(Weapon->GetEquipWeaponAnimMontage());
 	}
 	else
 	{
-		PlayAnimMontage(EquipWeaponAnimMontage);
+		PlayAnimMontage(Weapon->GetUnequipWeaponAnimMontage());
 	}
 }
 
@@ -167,18 +167,18 @@ void AUnleashedCharacter::Interact(const FInputActionValue& Value)
 	}
 }
 
-void AUnleashedCharacter::AttachWeapon()
+void AUnleashedCharacter::AttachWeapon(bool AttachToHand) const
 {
-	if (bIsWeaponAttachedToHand)
+	if (AttachToHand)
 	{
-		Weapon->AttachActorToOwner(Weapon->GetEquipmentAttachedSocketName());
+		Weapon->AttachActorToOwner(Weapon->GetHandAttachSocketName());
 	}
 	else
 	{
-		Weapon->AttachActorToOwner(CombatWeaponAttachSocketName);
+		Weapon->AttachActorToOwner(Weapon->GetEquipmentAttachedSocketName());
 	}
 
-	bIsWeaponAttachedToHand = !bIsWeaponAttachedToHand;
+	Weapon->SetAttachedToHand(!Weapon->IsAttachedToHand());
 }
 
 void AUnleashedCharacter::SetWeapon(AWeapon* WeaponToSet)

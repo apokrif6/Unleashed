@@ -49,12 +49,10 @@ class AUnleashedCharacter : public ACharacter
 	UPROPERTY()
 	AWeapon* Weapon = nullptr;
 
-	bool bIsWeaponAttachedToHand = false;
-
 public:
 	AUnleashedCharacter();
 
-	void AttachWeapon();
+	void AttachWeapon(bool AttachToHand) const;
 
 	void SetWeapon(AWeapon* WeaponToSet);
 
@@ -67,17 +65,6 @@ protected:
 
 	void Interact(const FInputActionValue& Value);
 
-	UPROPERTY(EditDefaultsOnly, Category = "Weapon")
-	FName CombatWeaponAttachSocketName = NAME_None;
-
-	UPROPERTY(EditDefaultsOnly, Category = "Weapon")
-	UAnimMontage* EquipWeaponAnimMontage;
-
-	UPROPERTY(EditDefaultsOnly, Category = "Weapon")
-	UAnimMontage* UnequipWeaponAnimMontage;
-
-protected:
-	// APawn interface
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	// To add mapping context

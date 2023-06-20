@@ -29,7 +29,7 @@ protected:
 	UPROPERTY(EditDefaultsOnly)
 	USkeletalMeshComponent* SkeletalMeshComponent;
 
-	UPROPERTY(EditDefaultsOnly)
+	UPROPERTY(EditDefaultsOnly, Category = "Attachments")
 	FName AttachSocketName = NAME_None;
 
 	UPrimitiveComponent* GetStaticMesh() const;

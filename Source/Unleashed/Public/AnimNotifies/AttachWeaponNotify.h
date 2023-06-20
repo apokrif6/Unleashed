@@ -16,4 +16,8 @@ class UNLEASHED_API UAttachWeaponNotify : public UAnimNotify
 
 	virtual void Notify(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation,
 	                    const FAnimNotifyEventReference& EventReference) override;
+
+protected:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool bAttachToHand = false;
 };
