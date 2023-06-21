@@ -9,6 +9,7 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
+#include "Interfaces/AnimInstanceInterface.h"
 #include "Interfaces/InteractInterface.h"
 #include "Kismet/KismetSystemLibrary.h"
 
@@ -132,7 +133,7 @@ void AUnleashedCharacter::ToggleCombatMode(const FInputActionValue& Value)
 {
 	if (!Weapon) return;
 
-	if (Weapon->IsAttachedToHand())
+	if (GetInCombatMode())
 	{
 		PlayAnimMontage(Weapon->GetEquipWeaponAnimMontage());
 	}
@@ -167,7 +168,7 @@ void AUnleashedCharacter::Interact(const FInputActionValue& Value)
 	}
 }
 
-void AUnleashedCharacter::AttachWeapon(bool AttachToHand) const
+void AUnleashedCharacter::AttachWeapon(bool AttachToHand)
 {
 	if (AttachToHand)
 	{
@@ -178,10 +179,27 @@ void AUnleashedCharacter::AttachWeapon(bool AttachToHand) const
 		Weapon->AttachActorToOwner(Weapon->GetEquipmentAttachedSocketName());
 	}
 
-	Weapon->SetAttachedToHand(!Weapon->IsAttachedToHand());
+	SetInCombatMode(!GetInCombatMode());
 }
 
 void AUnleashedCharacter::SetWeapon(AWeapon* WeaponToSet)
 {
+	if (Weapon)
+	{
+		Weapon->Unequip();
+		Weapon->Destroy();
+	}
+
 	Weapon = WeaponToSet;
+}
+
+void AUnleashedCharacter::SetInCombatMode(const bool InCombatMode)
+{
+	bInCombatMode = InCombatMode;
+
+	if (GetMesh()->GetAnimInstance()->Implements<UAnimInstanceInterface>())
+	{
+		IAnimInstanceInterface::Execute_ChangeInCombatMode(GetMesh()->GetAnimInstance(),
+		                                                   bInCombatMode);
+	}
 }

@@ -49,12 +49,18 @@ class AUnleashedCharacter : public ACharacter
 	UPROPERTY()
 	AWeapon* Weapon = nullptr;
 
+	bool bInCombatMode = false;
+
 public:
 	AUnleashedCharacter();
 
-	void AttachWeapon(bool AttachToHand) const;
+	void AttachWeapon(bool AttachToHand);
 
 	void SetWeapon(AWeapon* WeaponToSet);
+
+	void SetInCombatMode(const bool InCombatMode);
+
+	bool GetInCombatMode() const { return bInCombatMode; }
 
 protected:
 	void Move(const FInputActionValue& Value);

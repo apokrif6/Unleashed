@@ -12,7 +12,7 @@ AEquipment::AEquipment()
 
 void AEquipment::Equip()
 {
-	bIsEquipped = true;
+	SetIsEquipped(true);
 
 	AttachActorToOwner(AttachSocketName);
 }
@@ -20,7 +20,7 @@ void AEquipment::Equip()
 void AEquipment::Unequip()
 {
 	if (IsEquipped())
-		bIsEquipped = false;
+		SetIsEquipped(false);
 }
 
 void AEquipment::BeginPlay()
@@ -37,6 +37,11 @@ void AEquipment::AttachActorToOwner(const FName SocketName)
 
 	GetStaticMesh()->AttachToComponent(EquipmentOwner->GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale,
 	                                   SocketName);
+}
+
+void AEquipment::SetIsEquipped(bool IsEquipped)
+{
+	bIsEquipped = IsEquipped;
 }
 
 UPrimitiveComponent* AEquipment::GetStaticMesh() const
