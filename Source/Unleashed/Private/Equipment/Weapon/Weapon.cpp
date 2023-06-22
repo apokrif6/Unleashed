@@ -12,7 +12,7 @@ void AWeapon::Equip()
 	AUnleashedCharacter* UnleashedCharacter = Cast<AUnleashedCharacter>(Owner);
 	if (!UnleashedCharacter) return;
 
-	if (UnleashedCharacter->GetInCombatMode())
+	if (UnleashedCharacter->GetCombatComponent()->GetInCombatMode())
 	{
 		AttachActorToOwner(HandAttachSocketName);
 	}
@@ -21,7 +21,7 @@ void AWeapon::Equip()
 		AttachActorToOwner(AttachSocketName);
 	}
 
-	UnleashedCharacter->SetWeapon(this);
+	UnleashedCharacter->GetCombatComponent()->SetMainWeapon(this);
 
 	if (UnleashedCharacter->GetMesh()->GetAnimInstance()->Implements<UAnimInstanceInterface>())
 	{

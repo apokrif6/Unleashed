@@ -9,7 +9,6 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
-#include "Interfaces/AnimInstanceInterface.h"
 #include "Interfaces/InteractInterface.h"
 #include "Kismet/KismetSystemLibrary.h"
 
@@ -51,8 +50,7 @@ AUnleashedCharacter::AUnleashedCharacter()
 	// Attach the camera to the end of the boom and let the boom adjust to match the controller orientation
 	FollowCamera->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
 
-	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
-	// are set in the derived blueprint asset named ThirdPersonCharacter (to avoid direct content references in C++)
+	CombatComponent = CreateDefaultSubobject<UCombatComponent>(TEXT("CombatComponent"));
 }
 
 void AUnleashedCharacter::BeginPlay()
@@ -131,15 +129,15 @@ void AUnleashedCharacter::Look(const FInputActionValue& Value)
 
 void AUnleashedCharacter::ToggleCombatMode(const FInputActionValue& Value)
 {
-	if (!Weapon) return;
+	if (!CombatComponent->GetMainWeapon()) return;
 
-	if (GetInCombatMode())
+	if (CombatComponent->GetInCombatMode())
 	{
-		PlayAnimMontage(Weapon->GetEquipWeaponAnimMontage());
+		PlayAnimMontage(CombatComponent->GetMainWeapon()->GetEquipWeaponAnimMontage());
 	}
 	else
 	{
-		PlayAnimMontage(Weapon->GetUnequipWeaponAnimMontage());
+		PlayAnimMontage(CombatComponent->GetMainWeapon()->GetUnequipWeaponAnimMontage());
 	}
 }
 
@@ -165,41 +163,5 @@ void AUnleashedCharacter::Interact(const FInputActionValue& Value)
 	if (IInteractInterface* InteractInterface = Cast<IInteractInterface>(HitResult.GetActor()))
 	{
 		InteractInterface->Interact(this);
-	}
-}
-
-void AUnleashedCharacter::AttachWeapon(bool AttachToHand)
-{
-	if (AttachToHand)
-	{
-		Weapon->AttachActorToOwner(Weapon->GetHandAttachSocketName());
-	}
-	else
-	{
-		Weapon->AttachActorToOwner(Weapon->GetEquipmentAttachedSocketName());
-	}
-
-	SetInCombatMode(!GetInCombatMode());
-}
-
-void AUnleashedCharacter::SetWeapon(AWeapon* WeaponToSet)
-{
-	if (Weapon)
-	{
-		Weapon->Unequip();
-		Weapon->Destroy();
-	}
-
-	Weapon = WeaponToSet;
-}
-
-void AUnleashedCharacter::SetInCombatMode(const bool InCombatMode)
-{
-	bInCombatMode = InCombatMode;
-
-	if (GetMesh()->GetAnimInstance()->Implements<UAnimInstanceInterface>())
-	{
-		IAnimInstanceInterface::Execute_ChangeInCombatMode(GetMesh()->GetAnimInstance(),
-		                                                   bInCombatMode);
 	}
 }

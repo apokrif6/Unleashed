@@ -11,5 +11,5 @@ void UAttachWeaponNotify::Notify(USkeletalMeshComponent* MeshComp, UAnimSequence
 
 	if (!WeaponOwner) return;
 
-	WeaponOwner->AttachWeapon(bAttachToHand);
+	WeaponOwner->GetCombatComponent()->AttachWeapon(bAttachToHand);
 }
