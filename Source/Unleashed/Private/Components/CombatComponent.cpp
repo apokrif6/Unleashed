@@ -39,8 +39,7 @@ void UCombatComponent::AttachWeapon(bool AttachToHand)
 {
 	if (AttachToHand)
 	{
-		MainWeapon->AttachActorToOwner(
-			GetMainWeapon()->GetHandAttachSocketName());
+		MainWeapon->AttachActorToOwner(GetMainWeapon()->GetHandAttachSocketName());
 	}
 	else
 	{

@@ -24,6 +24,8 @@ public:
 
 	UAnimMontage* GetUnequipWeaponAnimMontage() const { return UnequipWeaponAnimMontage; }
 
+	TArray<UAnimMontage*> GetAttackMontages() const { return AttackMontages; }
+
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Attachments")
 	FName HandAttachSocketName = NAME_None;
@@ -33,6 +35,9 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Animations")
 	UAnimMontage* UnequipWeaponAnimMontage;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Animations")
+	TArray<UAnimMontage*> AttackMontages;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Combat")
 	TEnumAsByte<ECombatStyle> CombatStyle;

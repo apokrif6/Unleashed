@@ -27,9 +27,15 @@ public:
 
 	void AttachWeapon(bool AttachToHand);
 
+	int32 GetAttackCount() const { return AttackCount; }
+
 private:
 	UPROPERTY()
 	AWeapon* MainWeapon = nullptr;
 
 	bool bInCombatMode = false;
+
+	int32 AttackCount = 0;
+
+	bool bIsAttackSaved = false;
 };

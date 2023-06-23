@@ -88,6 +88,8 @@ void AUnleashedCharacter::SetupPlayerInputComponent(class UInputComponent* Playe
 		                                   &ThisClass::ToggleCombatMode);
 
 		EnhancedInputComponent->BindAction(InteractAction, ETriggerEvent::Triggered, this, &ThisClass::Interact);
+
+		EnhancedInputComponent->BindAction(AttackAction, ETriggerEvent::Triggered, this, &ThisClass::Attack);
 	}
 }
 
@@ -164,4 +166,28 @@ void AUnleashedCharacter::Interact(const FInputActionValue& Value)
 	{
 		InteractInterface->Interact(this);
 	}
+}
+
+void AUnleashedCharacter::Attack(const FInputActionValue& Value)
+{
+	if (!CombatComponent->GetMainWeapon()) return;
+
+	PerformAttack(CombatComponent->GetAttackCount(), true);
+}
+
+void AUnleashedCharacter::PerformAttack(int32 AttackIndex, bool bUseRandomIndex)
+{
+	TArray<UAnimMontage*> AttackMontages = CombatComponent->GetMainWeapon()->GetAttackMontages();
+	if (AttackIndex >= AttackMontages.Num())
+	{
+		//TODO
+		//log
+		return;
+	};
+
+	UAnimMontage* AttackMontage = bUseRandomIndex
+		                              ? AttackMontages[FMath::RandRange(0, AttackMontages.Num() - 1)]
+		                              : AttackMontage = AttackMontages[AttackIndex];
+
+	PlayAnimMontage(AttackMontage);
 }
