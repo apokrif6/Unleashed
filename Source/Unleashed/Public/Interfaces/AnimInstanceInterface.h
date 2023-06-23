@@ -27,5 +27,5 @@ public:
 	void ChangeCombatStyle(ECombatStyle CombatStyle);
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Combat")
-	void ChangeWeaponAttachedToHand(bool AttachedToHand);
+	void ChangeInCombatMode(bool InCombatMode);
 };

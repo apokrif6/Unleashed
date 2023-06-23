@@ -24,10 +24,6 @@ public:
 
 	UAnimMontage* GetUnequipWeaponAnimMontage() const { return UnequipWeaponAnimMontage; }
 
-	bool IsAttachedToHand() const { return bIsAttachedToHand; }
-
-	void SetAttachedToHand(bool AttachToHand);
-
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Attachments")
 	FName HandAttachSocketName = NAME_None;
@@ -40,7 +36,4 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Combat")
 	TEnumAsByte<ECombatStyle> CombatStyle;
-
-private:
-	bool bIsAttachedToHand = false;
 };

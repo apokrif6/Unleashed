@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "InputActionValue.h"
-#include "Equipment/Weapon/Weapon.h"
+#include "Components/CombatComponent.h"
 #include "UnleashedCharacter.generated.h"
 
 
@@ -46,15 +46,12 @@ class AUnleashedCharacter : public ACharacter
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputAction* InteractAction;
 
-	UPROPERTY()
-	AWeapon* Weapon = nullptr;
+	bool bInCombatMode = false;
 
 public:
 	AUnleashedCharacter();
 
-	void AttachWeapon(bool AttachToHand) const;
-
-	void SetWeapon(AWeapon* WeaponToSet);
+	UCombatComponent* GetCombatComponent() const { return CombatComponent; }
 
 protected:
 	void Move(const FInputActionValue& Value);
@@ -69,6 +66,9 @@ protected:
 
 	// To add mapping context
 	virtual void BeginPlay();
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Combat")
+	UCombatComponent* CombatComponent;
 
 public:
 	/** Returns CameraBoom subobject **/

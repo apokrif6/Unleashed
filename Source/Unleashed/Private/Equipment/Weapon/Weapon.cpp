@@ -7,30 +7,25 @@
 
 void AWeapon::Equip()
 {
-	Super::Equip();
+	SetIsEquipped(true);
 
 	AUnleashedCharacter* UnleashedCharacter = Cast<AUnleashedCharacter>(Owner);
 	if (!UnleashedCharacter) return;
 
-	UnleashedCharacter->SetWeapon(this);
+	if (UnleashedCharacter->GetCombatComponent()->GetInCombatMode())
+	{
+		AttachActorToOwner(HandAttachSocketName);
+	}
+	else
+	{
+		AttachActorToOwner(AttachSocketName);
+	}
+
+	UnleashedCharacter->GetCombatComponent()->SetMainWeapon(this);
 
 	if (UnleashedCharacter->GetMesh()->GetAnimInstance()->Implements<UAnimInstanceInterface>())
 	{
 		IAnimInstanceInterface::Execute_ChangeCombatStyle(UnleashedCharacter->GetMesh()->GetAnimInstance(),
 		                                                  CombatStyle);
-	}
-}
-
-void AWeapon::SetAttachedToHand(const bool AttachToHand)
-{
-	bIsAttachedToHand = AttachToHand;
-
-	AUnleashedCharacter* UnleashedCharacter = Cast<AUnleashedCharacter>(Owner);
-	if (!UnleashedCharacter) return;
-
-	if (UnleashedCharacter->GetMesh()->GetAnimInstance()->Implements<UAnimInstanceInterface>())
-	{
-		IAnimInstanceInterface::Execute_ChangeWeaponAttachedToHand(UnleashedCharacter->GetMesh()->GetAnimInstance(),
-		                                                           bIsAttachedToHand);
 	}
 }

@@ -22,6 +22,8 @@ public:
 
 	FName GetEquipmentAttachedSocketName() const { return AttachSocketName; }
 
+	void SetIsEquipped(bool IsEquipped);
+
 protected:
 	UPROPERTY(EditDefaultsOnly)
 	UStaticMeshComponent* StaticMeshComponent;
