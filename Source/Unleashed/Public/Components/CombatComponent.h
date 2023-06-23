@@ -27,7 +27,20 @@ public:
 
 	void AttachWeapon(bool AttachToHand);
 
+	void ResetAttackCount();
+
+	void IncreaseAttackCount();
+
+	UFUNCTION(BlueprintCallable)
 	int32 GetAttackCount() const { return AttackCount; }
+
+	void SetIsAttacking(bool IsAttacking);
+
+	bool GetIsAttacking() const { return bIsAttacking; }
+
+	void SetIsAttackSaved(bool IsAttackSaved);
+
+	bool GetIsAttackSaved() const { return bIsAttackSaved; }
 
 private:
 	UPROPERTY()
@@ -36,6 +49,8 @@ private:
 	bool bInCombatMode = false;
 
 	int32 AttackCount = 0;
+
+	bool bIsAttacking = false;
 
 	bool bIsAttackSaved = false;
 };

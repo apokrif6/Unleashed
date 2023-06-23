@@ -84,12 +84,12 @@ void AUnleashedCharacter::SetupPlayerInputComponent(class UInputComponent* Playe
 
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &ThisClass::Look);
 
-		EnhancedInputComponent->BindAction(ToggleCombatModeAction, ETriggerEvent::Triggered, this,
+		EnhancedInputComponent->BindAction(ToggleCombatModeAction, ETriggerEvent::Completed, this,
 		                                   &ThisClass::ToggleCombatMode);
 
-		EnhancedInputComponent->BindAction(InteractAction, ETriggerEvent::Triggered, this, &ThisClass::Interact);
+		EnhancedInputComponent->BindAction(InteractAction, ETriggerEvent::Completed, this, &ThisClass::Interact);
 
-		EnhancedInputComponent->BindAction(AttackAction, ETriggerEvent::Triggered, this, &ThisClass::Attack);
+		EnhancedInputComponent->BindAction(AttackAction, ETriggerEvent::Completed, this, &ThisClass::Attack);
 	}
 }
 
@@ -133,6 +133,8 @@ void AUnleashedCharacter::ToggleCombatMode(const FInputActionValue& Value)
 {
 	if (!CombatComponent->GetMainWeapon()) return;
 
+	if (GetMesh()->GetAnimInstance()->IsAnyMontagePlaying()) return;
+
 	if (CombatComponent->GetInCombatMode())
 	{
 		PlayAnimMontage(CombatComponent->GetMainWeapon()->GetEquipWeaponAnimMontage());
@@ -172,10 +174,17 @@ void AUnleashedCharacter::Attack(const FInputActionValue& Value)
 {
 	if (!CombatComponent->GetMainWeapon()) return;
 
-	PerformAttack(CombatComponent->GetAttackCount(), true);
+	if (CombatComponent->GetIsAttacking())
+	{
+		CombatComponent->SetIsAttackSaved(true);
+	}
+	else
+	{
+		PerformAttack(CombatComponent->GetAttackCount());
+	}
 }
 
-void AUnleashedCharacter::PerformAttack(int32 AttackIndex, bool bUseRandomIndex)
+void AUnleashedCharacter::PerformAttack(const int32 AttackIndex, const bool UseRandomIndex)
 {
 	TArray<UAnimMontage*> AttackMontages = CombatComponent->GetMainWeapon()->GetAttackMontages();
 	if (AttackIndex >= AttackMontages.Num())
@@ -185,9 +194,31 @@ void AUnleashedCharacter::PerformAttack(int32 AttackIndex, bool bUseRandomIndex)
 		return;
 	};
 
-	UAnimMontage* AttackMontage = bUseRandomIndex
+	UAnimMontage* AttackMontage = UseRandomIndex
 		                              ? AttackMontages[FMath::RandRange(0, AttackMontages.Num() - 1)]
 		                              : AttackMontage = AttackMontages[AttackIndex];
+	if (!AttackMontage) return;
+
+	CombatComponent->SetIsAttacking(true);
 
 	PlayAnimMontage(AttackMontage);
+
+	CombatComponent->IncreaseAttackCount();
+}
+
+void AUnleashedCharacter::ContinueCombo()
+{
+	CombatComponent->SetIsAttacking(false);
+
+	if (CombatComponent->GetIsAttackSaved())
+	{
+		CombatComponent->SetIsAttackSaved(false);
+
+		PerformAttack(CombatComponent->GetAttackCount());
+	}
+}
+
+void AUnleashedCharacter::CancelCombo()
+{
+	CombatComponent->ResetAttackCount();
 }

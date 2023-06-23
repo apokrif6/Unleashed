@@ -9,7 +9,7 @@ void AWeapon::Equip()
 {
 	SetIsEquipped(true);
 
-	AUnleashedCharacter* UnleashedCharacter = Cast<AUnleashedCharacter>(Owner);
+	const AUnleashedCharacter* UnleashedCharacter = Cast<AUnleashedCharacter>(Owner);
 	if (!UnleashedCharacter) return;
 
 	if (UnleashedCharacter->GetCombatComponent()->GetInCombatMode())
@@ -22,6 +22,8 @@ void AWeapon::Equip()
 	}
 
 	UnleashedCharacter->GetCombatComponent()->SetMainWeapon(this);
+
+	UnleashedCharacter->GetCombatComponent()->ResetAttackCount();
 
 	if (UnleashedCharacter->GetMesh()->GetAnimInstance()->Implements<UAnimInstanceInterface>())
 	{

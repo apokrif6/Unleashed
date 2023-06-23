@@ -35,7 +35,7 @@ void UCombatComponent::SetInCombatMode(const bool InCombatMode)
 	}
 }
 
-void UCombatComponent::AttachWeapon(bool AttachToHand)
+void UCombatComponent::AttachWeapon(const bool AttachToHand)
 {
 	if (AttachToHand)
 	{
@@ -47,4 +47,35 @@ void UCombatComponent::AttachWeapon(bool AttachToHand)
 	}
 
 	SetInCombatMode(!GetInCombatMode());
+}
+
+void UCombatComponent::ResetAttackCount()
+{
+	AttackCount = 0;
+
+	bIsAttackSaved = false;
+
+	bIsAttacking = false;
+}
+
+void UCombatComponent::SetIsAttacking(const bool IsAttacking)
+{
+	bIsAttacking = IsAttacking;
+}
+
+void UCombatComponent::SetIsAttackSaved(const bool IsAttackSaved)
+{
+	bIsAttackSaved = IsAttackSaved;
+}
+
+void UCombatComponent::IncreaseAttackCount()
+{
+	if (AttackCount + 1 >= GetMainWeapon()->GetAttackMontages().Num())
+	{
+		ResetAttackCount();
+	}
+	else
+	{
+		AttackCount++;
+	}
 }

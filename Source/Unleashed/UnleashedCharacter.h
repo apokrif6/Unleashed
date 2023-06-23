@@ -6,13 +6,14 @@
 #include "GameFramework/Character.h"
 #include "InputActionValue.h"
 #include "Components/CombatComponent.h"
+#include "Interfaces/CombatInterface.h"
 #include "UnleashedCharacter.generated.h"
 
 
 class UInputAction;
 
 UCLASS(config=Game)
-class AUnleashedCharacter : public ACharacter
+class AUnleashedCharacter : public ACharacter, public ICombatInterface
 {
 	GENERATED_BODY()
 
@@ -51,7 +52,7 @@ class AUnleashedCharacter : public ACharacter
 
 	bool bInCombatMode = false;
 
-	void PerformAttack(int32 AttackIndex, bool bUseRandomIndex = false);
+	void PerformAttack(int32 AttackIndex, bool UseRandomIndex = false);
 
 public:
 	AUnleashedCharacter();
@@ -62,6 +63,10 @@ public:
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 	/** Returns FollowCamera subobject **/
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
+
+	virtual void ContinueCombo() override;
+
+	virtual void CancelCombo() override;
 
 protected:
 	void Move(const FInputActionValue& Value);
