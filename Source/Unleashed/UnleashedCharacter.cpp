@@ -10,6 +10,7 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "Interfaces/InteractInterface.h"
+#include "Kismet/KismetMathLibrary.h"
 #include "Kismet/KismetSystemLibrary.h"
 
 
@@ -90,6 +91,8 @@ void AUnleashedCharacter::SetupPlayerInputComponent(class UInputComponent* Playe
 		EnhancedInputComponent->BindAction(InteractAction, ETriggerEvent::Completed, this, &ThisClass::Interact);
 
 		EnhancedInputComponent->BindAction(AttackAction, ETriggerEvent::Completed, this, &ThisClass::Attack);
+
+		EnhancedInputComponent->BindAction(RollAction, ETriggerEvent::Completed, this, &ThisClass::Roll);
 	}
 }
 
@@ -184,6 +187,18 @@ void AUnleashedCharacter::Attack(const FInputActionValue& Value)
 	}
 }
 
+void AUnleashedCharacter::Roll(const FInputActionValue& Value)
+{
+	if (!CombatComponent->GetMainWeapon()) return;
+
+	//TODO
+	//replace with IsRolling
+	//and move to combat component :)
+	if (GetMesh()->GetAnimInstance()->IsAnyMontagePlaying()) return;
+
+	PerformRoll();
+}
+
 void AUnleashedCharacter::PerformAttack(const int32 AttackIndex, const bool UseRandomIndex)
 {
 	TArray<UAnimMontage*> AttackMontages = CombatComponent->GetMainWeapon()->GetAttackMontages();
@@ -206,6 +221,13 @@ void AUnleashedCharacter::PerformAttack(const int32 AttackIndex, const bool UseR
 	CombatComponent->IncreaseAttackCount();
 }
 
+void AUnleashedCharacter::PerformRoll()
+{
+	UAnimMontage* DodgeAnimMontage = CombatComponent->GetMainWeapon()->GetDodgeMontage();
+
+	PlayAnimMontage(DodgeAnimMontage);
+}
+
 void AUnleashedCharacter::ContinueCombo()
 {
 	CombatComponent->SetIsAttacking(false);
@@ -221,4 +243,16 @@ void AUnleashedCharacter::ContinueCombo()
 void AUnleashedCharacter::CancelCombo()
 {
 	CombatComponent->ResetAttackCount();
+}
+
+FRotator AUnleashedCharacter::GetRollRotation()
+{
+	const FVector LastInputVector = GetMovementComponent()->GetLastInputVector();
+
+	if (!LastInputVector.Equals(FVector::ZeroVector, RollLastMovementVectorTolerance))
+	{
+		return UKismetMathLibrary::MakeRotFromX(LastInputVector);
+	}
+
+	return GetActorRotation();
 }

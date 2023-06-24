@@ -31,7 +31,6 @@ public:
 
 	void IncreaseAttackCount();
 
-	UFUNCTION(BlueprintCallable)
 	int32 GetAttackCount() const { return AttackCount; }
 
 	void SetIsAttacking(bool IsAttacking);

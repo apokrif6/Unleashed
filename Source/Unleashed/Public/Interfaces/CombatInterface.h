@@ -28,4 +28,9 @@ public:
 	virtual void CancelCombo()
 	{
 	}
+
+	virtual FRotator GetRollRotation()
+	{
+		return {};
+	}
 };

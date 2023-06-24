@@ -26,6 +26,8 @@ public:
 
 	TArray<UAnimMontage*> GetAttackMontages() const { return AttackMontages; }
 
+	UAnimMontage* GetDodgeMontage() const { return DodgeMontage; }
+
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Attachments")
 	FName HandAttachSocketName = NAME_None;
@@ -38,6 +40,9 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Animations")
 	TArray<UAnimMontage*> AttackMontages;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Animations")
+	UAnimMontage* DodgeMontage;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Combat")
 	TEnumAsByte<ECombatStyle> CombatStyle;

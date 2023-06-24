@@ -8,9 +8,9 @@
 void UContinueComboNotify::Notify(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation,
                                   const FAnimNotifyEventReference& EventReference)
 {
-	AUnleashedCharacter* WeaponOwner = Cast<AUnleashedCharacter>(MeshComp->GetOwner());
+	AUnleashedCharacter* UnleashedCharacter = Cast<AUnleashedCharacter>(MeshComp->GetOwner());
 
-	if (!WeaponOwner) return;
+	if (!UnleashedCharacter) return;
 
-	WeaponOwner->ContinueCombo();
+	UnleashedCharacter->ContinueCombo();
 }
