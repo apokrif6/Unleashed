@@ -219,6 +219,8 @@ void AUnleashedCharacter::PerformRoll()
 {
 	UAnimMontage* DodgeAnimMontage = CombatComponent->GetMainWeapon()->GetDodgeMontage();
 
+	CombatComponent->SetIsAttacking(false);
+
 	CombatComponent->SetIsRolling(true);
 
 	APlayerController* PlayerController = Cast<APlayerController>(GetController());
@@ -241,11 +243,6 @@ void AUnleashedCharacter::ContinueCombo()
 	}
 }
 
-void AUnleashedCharacter::CancelCombo()
-{
-	CombatComponent->ResetAttackCount();
-}
-
 FRotator AUnleashedCharacter::GetRollRotation()
 {
 	const FVector LastInputVector = GetMovementComponent()->GetLastInputVector();
@@ -258,9 +255,9 @@ FRotator AUnleashedCharacter::GetRollRotation()
 	return GetActorRotation();
 }
 
-void AUnleashedCharacter::ResetRoll()
+void AUnleashedCharacter::ResetCombat()
 {
-	CombatComponent->SetIsRolling(false);
+	CombatComponent->ResetCombat();
 
 	APlayerController* PlayerController = Cast<APlayerController>(GetController());
 	if (!PlayerController) return;

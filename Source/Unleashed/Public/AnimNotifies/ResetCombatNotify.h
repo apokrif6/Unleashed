@@ -4,13 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "Animation/AnimNotifies/AnimNotify.h"
-#include "CancelComboNotify.generated.h"
+#include "ResetCombatNotify.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class UNLEASHED_API UCancelComboNotify : public UAnimNotify
+class UNLEASHED_API UResetCombatNotify : public UAnimNotify
 {
 	GENERATED_BODY()
 

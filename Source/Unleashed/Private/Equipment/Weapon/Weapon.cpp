@@ -23,7 +23,7 @@ void AWeapon::Equip()
 
 	UnleashedCharacter->GetCombatComponent()->SetMainWeapon(this);
 
-	UnleashedCharacter->GetCombatComponent()->ResetAttackCount();
+	UnleashedCharacter->GetCombatComponent()->ResetCombat();
 
 	if (UnleashedCharacter->GetMesh()->GetAnimInstance()->Implements<UAnimInstanceInterface>())
 	{

@@ -25,16 +25,12 @@ public:
 	{
 	}
 
-	virtual void CancelCombo()
-	{
-	}
-
 	virtual FRotator GetRollRotation()
 	{
 		return {};
 	}
 
-	virtual void ResetRoll()
+	virtual void ResetCombat()
 	{
 	}
 };

@@ -50,13 +50,15 @@ void UCombatComponent::AttachWeapon(const bool AttachToHand)
 	SetInCombatMode(!GetInCombatMode());
 }
 
-void UCombatComponent::ResetAttackCount()
+void UCombatComponent::ResetCombat()
 {
 	AttackCount = 0;
 
 	bIsAttackSaved = false;
 
 	bIsAttacking = false;
+
+	bIsRolling = false;
 }
 
 void UCombatComponent::SetIsAttacking(const bool IsAttacking)
@@ -85,7 +87,7 @@ void UCombatComponent::IncreaseAttackCount()
 {
 	if (AttackCount + 1 >= GetMainWeapon()->GetAttackMontages().Num())
 	{
-		ResetAttackCount();
+		ResetCombat();
 	}
 	else
 	{

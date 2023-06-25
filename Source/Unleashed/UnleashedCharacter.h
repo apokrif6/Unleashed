@@ -69,11 +69,9 @@ public:
 
 	virtual void ContinueCombo() override;
 
-	virtual void CancelCombo() override;
-
 	virtual FRotator GetRollRotation() override;
 
-	virtual void ResetRoll() override;
+	virtual void ResetCombat() override;
 
 protected:
 	void Move(const FInputActionValue& Value);

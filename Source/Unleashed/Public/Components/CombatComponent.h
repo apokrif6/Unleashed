@@ -27,7 +27,7 @@ public:
 
 	void AttachWeapon(bool AttachToHand);
 
-	void ResetAttackCount();
+	void ResetCombat();
 
 	void IncreaseAttackCount();
 

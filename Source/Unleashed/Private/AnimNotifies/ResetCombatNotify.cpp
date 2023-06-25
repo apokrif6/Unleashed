@@ -1,16 +1,15 @@
 // Unleashed
 
 
-#include "AnimNotifies/CancelComboNotify.h"
-
+#include "AnimNotifies/ResetCombatNotify.h"
 #include "Unleashed/UnleashedCharacter.h"
 
-void UCancelComboNotify::Notify(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation,
+void UResetCombatNotify::Notify(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation,
                                 const FAnimNotifyEventReference& EventReference)
 {
 	AUnleashedCharacter* UnleashedCharacter = Cast<AUnleashedCharacter>(MeshComp->GetOwner());
 
 	if (!UnleashedCharacter) return;
 
-	UnleashedCharacter->CancelCombo();
+	UnleashedCharacter->ResetCombat();
 }
