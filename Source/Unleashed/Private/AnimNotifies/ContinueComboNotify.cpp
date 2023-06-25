@@ -2,7 +2,6 @@
 
 
 #include "AnimNotifies/ContinueComboNotify.h"
-
 #include "Unleashed/UnleashedCharacter.h"
 
 void UContinueComboNotify::Notify(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation,

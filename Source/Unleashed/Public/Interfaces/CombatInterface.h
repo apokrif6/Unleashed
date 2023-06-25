@@ -33,4 +33,8 @@ public:
 	{
 		return {};
 	}
+
+	virtual void ResetRoll()
+	{
+	}
 };

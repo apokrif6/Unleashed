@@ -3,6 +3,7 @@
 
 #include "Components/CombatComponent.h"
 
+#include "GameFramework/PawnMovementComponent.h"
 #include "Interfaces/AnimInstanceInterface.h"
 #include "Unleashed/UnleashedCharacter.h"
 
@@ -25,7 +26,7 @@ void UCombatComponent::SetInCombatMode(const bool InCombatMode)
 {
 	bInCombatMode = InCombatMode;
 
-	ACharacter* CombatComponentOwner = Cast<ACharacter>(GetOwner());
+	const ACharacter* CombatComponentOwner = Cast<ACharacter>(GetOwner());
 	if (!CombatComponentOwner) return;
 
 	if (CombatComponentOwner->GetMesh()->GetAnimInstance()->Implements<UAnimInstanceInterface>())
@@ -66,6 +67,18 @@ void UCombatComponent::SetIsAttacking(const bool IsAttacking)
 void UCombatComponent::SetIsAttackSaved(const bool IsAttackSaved)
 {
 	bIsAttackSaved = IsAttackSaved;
+}
+
+void UCombatComponent::SetIsRolling(const bool IsRolling)
+{
+	bIsRolling = IsRolling;
+}
+
+bool UCombatComponent::CanRoll() const
+{
+	if (bIsRolling) return false;
+
+	return true;
 }
 
 void UCombatComponent::IncreaseAttackCount()

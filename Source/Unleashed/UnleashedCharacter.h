@@ -29,10 +29,6 @@ class AUnleashedCharacter : public ACharacter, public ICombatInterface
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	class UInputMappingContext* DefaultMappingContext;
 
-	/** Jump Input Action */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
-	UInputAction* JumpAction;
-
 	/** Move Input Action */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputAction* MoveAction;
@@ -76,6 +72,8 @@ public:
 	virtual void CancelCombo() override;
 
 	virtual FRotator GetRollRotation() override;
+
+	virtual void ResetRoll() override;
 
 protected:
 	void Move(const FInputActionValue& Value);

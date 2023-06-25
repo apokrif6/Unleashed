@@ -41,6 +41,10 @@ public:
 
 	bool GetIsAttackSaved() const { return bIsAttackSaved; }
 
+	void SetIsRolling(const bool IsRolling);
+
+	bool CanRoll() const;
+
 private:
 	UPROPERTY()
 	AWeapon* MainWeapon = nullptr;
@@ -52,4 +56,6 @@ private:
 	bool bIsAttacking = false;
 
 	bool bIsAttackSaved = false;
+
+	bool bIsRolling = false;
 };

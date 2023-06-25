@@ -78,9 +78,6 @@ void AUnleashedCharacter::SetupPlayerInputComponent(class UInputComponent* Playe
 	// Set up action bindings
 	if (UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(PlayerInputComponent))
 	{
-		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Triggered, this, &ACharacter::Jump);
-		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &ACharacter::StopJumping);
-
 		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &ThisClass::Move);
 
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &ThisClass::Look);
@@ -191,10 +188,7 @@ void AUnleashedCharacter::Roll(const FInputActionValue& Value)
 {
 	if (!CombatComponent->GetMainWeapon()) return;
 
-	//TODO
-	//replace with IsRolling
-	//and move to combat component :)
-	if (GetMesh()->GetAnimInstance()->IsAnyMontagePlaying()) return;
+	if (!CombatComponent->CanRoll()) return;
 
 	PerformRoll();
 }
@@ -224,6 +218,13 @@ void AUnleashedCharacter::PerformAttack(const int32 AttackIndex, const bool UseR
 void AUnleashedCharacter::PerformRoll()
 {
 	UAnimMontage* DodgeAnimMontage = CombatComponent->GetMainWeapon()->GetDodgeMontage();
+
+	CombatComponent->SetIsRolling(true);
+
+	APlayerController* PlayerController = Cast<APlayerController>(GetController());
+	if (!PlayerController) return;
+
+	DisableInput(PlayerController);
 
 	PlayAnimMontage(DodgeAnimMontage);
 }
@@ -255,4 +256,14 @@ FRotator AUnleashedCharacter::GetRollRotation()
 	}
 
 	return GetActorRotation();
+}
+
+void AUnleashedCharacter::ResetRoll()
+{
+	CombatComponent->SetIsRolling(false);
+
+	APlayerController* PlayerController = Cast<APlayerController>(GetController());
+	if (!PlayerController) return;
+
+	EnableInput(PlayerController);
 }
