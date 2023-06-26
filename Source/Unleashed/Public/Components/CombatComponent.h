@@ -14,7 +14,6 @@ class UNLEASHED_API UCombatComponent : public UActorComponent
 	GENERATED_BODY()
 
 public:
-	// Sets default values for this component's properties
 	UCombatComponent();
 
 	void SetMainWeapon(AWeapon* Weapon);
@@ -35,11 +34,11 @@ public:
 
 	void SetIsAttacking(bool IsAttacking);
 
-	bool GetIsAttacking() const { return bIsAttacking; }
+	bool IsAttacking() const { return bIsAttacking; }
 
 	void SetIsAttackSaved(bool IsAttackSaved);
 
-	bool GetIsAttackSaved() const { return bIsAttackSaved; }
+	bool IsAttackSaved() const { return bIsAttackSaved; }
 
 	void SetIsRolling(const bool IsRolling);
 

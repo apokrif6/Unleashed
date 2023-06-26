@@ -12,10 +12,10 @@ AWeaponPickup::AWeaponPickup()
 
 void AWeaponPickup::Interact(AActor* InteractionInstigator)
 {
-	UWorld* World = GetWorld();
-	if (!World) return;
+	AUnleashedCharacter* UnleashedCharacter = Cast<AUnleashedCharacter>(InteractionInstigator);
+	if (!UnleashedCharacter) return;
 
-	AWeapon* Weapon = World->SpawnActor<AWeapon>(WeaponToPickup);
+	AWeapon* Weapon = GetWorld()->SpawnActor<AWeapon>(WeaponToPickup);
 	if (!Weapon) return;
 
 	Weapon->SetOwner(InteractionInstigator);

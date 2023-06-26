@@ -7,8 +7,7 @@
 void UAttachWeaponNotify::Notify(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation,
                                  const FAnimNotifyEventReference& EventReference)
 {
-	AUnleashedCharacter* UnleashedCharacter = Cast<AUnleashedCharacter>(MeshComp->GetOwner());
-
+	const AUnleashedCharacter* UnleashedCharacter = Cast<AUnleashedCharacter>(MeshComp->GetOwner());
 	if (!UnleashedCharacter) return;
 
 	UnleashedCharacter->GetCombatComponent()->AttachWeapon(bAttachToHand);

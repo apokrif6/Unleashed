@@ -8,7 +8,6 @@ void URollCharacterNotifyState::NotifyTick(USkeletalMeshComponent* MeshComp, UAn
                                            float FrameDeltaTime, const FAnimNotifyEventReference& EventReference)
 {
 	AUnleashedCharacter* UnleashedCharacter = Cast<AUnleashedCharacter>(MeshComp->GetOwner());
-
 	if (!UnleashedCharacter) return;
 
 	const FRotator RollRotation = FMath::RInterpConstantTo(UnleashedCharacter->GetActorRotation(),

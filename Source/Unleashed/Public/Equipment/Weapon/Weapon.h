@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Combat/CombatStyleEnum.h"
+#include "Components/CombatCollisionComponent.h"
 #include "Equipment/Equipment.h"
 #include "Weapon.generated.h"
 
@@ -16,7 +17,11 @@ class UNLEASHED_API AWeapon : public AEquipment
 	GENERATED_BODY()
 
 public:
+	AWeapon();
+
 	virtual void Equip() override;
+
+	virtual void BeginPlay() override;
 
 	FName GetHandAttachSocketName() const { return HandAttachSocketName; }
 
@@ -27,6 +32,8 @@ public:
 	TArray<UAnimMontage*> GetAttackMontages() const { return AttackMontages; }
 
 	UAnimMontage* GetDodgeMontage() const { return DodgeMontage; }
+
+	ACombatCollisionComponent* GetCombatCollisionComponent() const { return CombatCollisionComponent; }
 
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Attachments")
@@ -41,9 +48,28 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Animations")
 	TArray<UAnimMontage*> AttackMontages;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Animations")
+	UPROPERTY(EditDefaultsOnly, Category = "Animations")
 	UAnimMontage* DodgeMontage;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Combat")
 	TEnumAsByte<ECombatStyle> CombatStyle;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Combat")
+	float Damage = 30.f;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Combat")
+	USoundBase* HitSound;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Combat")
+	UParticleSystem* HitParticle;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Combat")
+	UAnimMontage* HitReactionAnimMontage;
+
+private:
+	UPROPERTY()
+	ACombatCollisionComponent* CombatCollisionComponent;
+
+	UFUNCTION()
+	void OnActorHit(FHitResult HitResult);
 };

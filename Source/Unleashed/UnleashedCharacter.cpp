@@ -174,7 +174,7 @@ void AUnleashedCharacter::Attack(const FInputActionValue& Value)
 {
 	if (!CombatComponent->GetMainWeapon()) return;
 
-	if (CombatComponent->GetIsAttacking())
+	if (CombatComponent->IsAttacking())
 	{
 		CombatComponent->SetIsAttackSaved(true);
 	}
@@ -235,7 +235,7 @@ void AUnleashedCharacter::ContinueCombo()
 {
 	CombatComponent->SetIsAttacking(false);
 
-	if (CombatComponent->GetIsAttackSaved())
+	if (CombatComponent->IsAttackSaved())
 	{
 		CombatComponent->SetIsAttackSaved(false);
 
