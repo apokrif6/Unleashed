@@ -3,7 +3,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Engine/UserDefinedEnum.h"
 #include "CombatStyleEnum.generated.h"
 
 /**

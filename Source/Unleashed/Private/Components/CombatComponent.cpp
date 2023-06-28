@@ -55,32 +55,11 @@ void UCombatComponent::ResetCombat()
 	AttackCount = 0;
 
 	bIsAttackSaved = false;
-
-	bIsAttacking = false;
-
-	bIsRolling = false;
-}
-
-void UCombatComponent::SetIsAttacking(const bool IsAttacking)
-{
-	bIsAttacking = IsAttacking;
 }
 
 void UCombatComponent::SetIsAttackSaved(const bool IsAttackSaved)
 {
 	bIsAttackSaved = IsAttackSaved;
-}
-
-void UCombatComponent::SetIsRolling(const bool IsRolling)
-{
-	bIsRolling = IsRolling;
-}
-
-bool UCombatComponent::CanRoll() const
-{
-	if (bIsRolling) return false;
-
-	return true;
 }
 
 void UCombatComponent::IncreaseAttackCount()

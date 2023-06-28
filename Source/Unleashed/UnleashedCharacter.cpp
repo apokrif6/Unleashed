@@ -52,6 +52,7 @@ AUnleashedCharacter::AUnleashedCharacter()
 	FollowCamera->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
 
 	CombatComponent = CreateDefaultSubobject<UCombatComponent>(TEXT("CombatComponent"));
+	CombatStateMachineComponent = CreateDefaultSubobject<UCombatStateMachineComponent>(TEXT("CombatStateMachineComponent"));
 }
 
 void AUnleashedCharacter::BeginPlay()
@@ -68,6 +69,11 @@ void AUnleashedCharacter::BeginPlay()
 			Subsystem->AddMappingContext(DefaultMappingContext, 0);
 		}
 	}
+
+	OnTakeAnyDamage.AddDynamic(this, &ThisClass::OnActorHit);
+
+	CombatStateMachineComponent->OnStateBegin.AddDynamic(this, &ThisClass::OnStateBegin);
+	CombatStateMachineComponent->OnStateEnd.AddDynamic(this, &ThisClass::OnStateEnd);
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -135,6 +141,10 @@ void AUnleashedCharacter::ToggleCombatMode(const FInputActionValue& Value)
 
 	if (GetMesh()->GetAnimInstance()->IsAnyMontagePlaying()) return;
 
+	if (CombatStateMachineComponent->IsStateEqualsToAnyOf(TArray{Attacking, Rolling, General, Dead, Disabled})) return;
+
+	CombatStateMachineComponent->SetState(General);
+
 	if (CombatComponent->GetInCombatMode())
 	{
 		PlayAnimMontage(CombatComponent->GetMainWeapon()->GetEquipWeaponAnimMontage());
@@ -174,7 +184,9 @@ void AUnleashedCharacter::Attack(const FInputActionValue& Value)
 {
 	if (!CombatComponent->GetMainWeapon()) return;
 
-	if (CombatComponent->IsAttacking())
+	if (CombatStateMachineComponent->IsStateEqualsToAnyOf(TArray{Rolling, General, Disabled, Dead})) return;
+	
+	if (CombatStateMachineComponent->GetState() == Attacking)
 	{
 		CombatComponent->SetIsAttackSaved(true);
 	}
@@ -188,7 +200,7 @@ void AUnleashedCharacter::Roll(const FInputActionValue& Value)
 {
 	if (!CombatComponent->GetMainWeapon()) return;
 
-	if (!CombatComponent->CanRoll()) return;
+	if (CombatStateMachineComponent->IsStateEqualsToAnyOf(TArray{Attacking, Rolling, General, Disabled, Dead})) return;
 
 	PerformRoll();
 }
@@ -201,14 +213,14 @@ void AUnleashedCharacter::PerformAttack(const int32 AttackIndex, const bool UseR
 		//TODO
 		//log
 		return;
-	};
+	}
 
 	UAnimMontage* AttackMontage = UseRandomIndex
 		                              ? AttackMontages[FMath::RandRange(0, AttackMontages.Num() - 1)]
 		                              : AttackMontage = AttackMontages[AttackIndex];
 	if (!AttackMontage) return;
 
-	CombatComponent->SetIsAttacking(true);
+	CombatStateMachineComponent->SetState(Attacking);
 
 	PlayAnimMontage(AttackMontage);
 
@@ -219,25 +231,32 @@ void AUnleashedCharacter::PerformRoll()
 {
 	UAnimMontage* DodgeAnimMontage = CombatComponent->GetMainWeapon()->GetDodgeMontage();
 
-	CombatComponent->SetIsAttacking(false);
-
-	CombatComponent->SetIsRolling(true);
-
-	APlayerController* PlayerController = Cast<APlayerController>(GetController());
-	if (!PlayerController) return;
-
-	DisableInput(PlayerController);
+	CombatStateMachineComponent->SetState(Rolling);
 
 	PlayAnimMontage(DodgeAnimMontage);
 }
 
+void AUnleashedCharacter::OnStateBegin(ECombatState CombatState)
+{
+}
+
+void AUnleashedCharacter::OnStateEnd(ECombatState CombatState)
+{
+}
+
+void AUnleashedCharacter::OnActorHit(AActor* DamagedActor, float Damage, const UDamageType* DamageType,
+	AController* InstigatedBy, AActor* DamageCauser)
+{
+	CombatStateMachineComponent->SetState(Disabled);
+}
+
 void AUnleashedCharacter::ContinueCombo()
 {
-	CombatComponent->SetIsAttacking(false);
-
 	if (CombatComponent->IsAttackSaved())
 	{
 		CombatComponent->SetIsAttackSaved(false);
+
+		CombatStateMachineComponent->SetState(Idling);
 
 		PerformAttack(CombatComponent->GetAttackCount());
 	}
@@ -259,8 +278,5 @@ void AUnleashedCharacter::ResetCombat()
 {
 	CombatComponent->ResetCombat();
 
-	APlayerController* PlayerController = Cast<APlayerController>(GetController());
-	if (!PlayerController) return;
-
-	EnableInput(PlayerController);
+	CombatStateMachineComponent->ResetState();
 }

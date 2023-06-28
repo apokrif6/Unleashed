@@ -6,6 +6,7 @@
 #include "GameFramework/Character.h"
 #include "InputActionValue.h"
 #include "Components/CombatComponent.h"
+#include "Components/CombatStateMachineComponent.h"
 #include "Interfaces/CombatInterface.h"
 #include "UnleashedCharacter.generated.h"
 
@@ -55,12 +56,23 @@ class AUnleashedCharacter : public ACharacter, public ICombatInterface
 
 	void PerformRoll();
 
-	const float RollLastMovementVectorTolerance = 0.001;
+	const float RollLastMovementVectorTolerance = 0.001f;
 
+	UFUNCTION()
+	void OnStateBegin(ECombatState CombatState);
+
+	UFUNCTION()
+	void OnStateEnd(ECombatState CombatState);
+	
+	UFUNCTION()
+	void OnActorHit(AActor* DamagedActor, float Damage, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser);
+	
 public:
 	AUnleashedCharacter();
 
 	UCombatComponent* GetCombatComponent() const { return CombatComponent; }
+
+	UCombatStateMachineComponent* GetCombatStateMachineComponent() const { return CombatStateMachineComponent; }
 
 	/** Returns CameraBoom subobject **/
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
@@ -93,4 +105,7 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Combat")
 	UCombatComponent* CombatComponent;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Combat")
+	UCombatStateMachineComponent* CombatStateMachineComponent;
 };

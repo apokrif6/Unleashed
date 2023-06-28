@@ -32,17 +32,9 @@ public:
 
 	int32 GetAttackCount() const { return AttackCount; }
 
-	void SetIsAttacking(bool IsAttacking);
-
-	bool IsAttacking() const { return bIsAttacking; }
-
 	void SetIsAttackSaved(bool IsAttackSaved);
 
 	bool IsAttackSaved() const { return bIsAttackSaved; }
-
-	void SetIsRolling(const bool IsRolling);
-
-	bool CanRoll() const;
 
 private:
 	UPROPERTY()
@@ -52,9 +44,5 @@ private:
 
 	int32 AttackCount = 0;
 
-	bool bIsAttacking = false;
-
 	bool bIsAttackSaved = false;
-
-	bool bIsRolling = false;
 };
