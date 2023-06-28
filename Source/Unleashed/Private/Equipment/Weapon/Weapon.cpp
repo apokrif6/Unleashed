@@ -14,6 +14,8 @@ AWeapon::AWeapon()
 
 void AWeapon::BeginPlay()
 {
+	Super::BeginPlay();
+
 	CombatCollisionComponent->OnActorHit.AddDynamic(this, &ThisClass::OnActorHit);
 }
 
