@@ -200,7 +200,7 @@ void AUnleashedCharacter::Roll(const FInputActionValue& Value)
 {
 	if (!CombatComponent->GetMainWeapon()) return;
 
-	if (CombatStateMachineComponent->IsStateEqualsToAnyOf(TArray{Attacking, Rolling, General, Disabled, Dead})) return;
+	if (CombatStateMachineComponent->IsStateEqualsToAnyOf(TArray{Rolling, General, Disabled, Dead})) return;
 
 	PerformRoll();
 }
