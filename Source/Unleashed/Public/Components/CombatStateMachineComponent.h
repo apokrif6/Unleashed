@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
-#include "Unleashed/Combat/CombatStateEnum.h"
+#include "Combat/CombatStateEnum.h"
 #include "CombatStateMachineComponent.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnStateBegin, ECombatState, CombatState);
