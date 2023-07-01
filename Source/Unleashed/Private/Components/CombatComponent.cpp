@@ -62,6 +62,25 @@ void UCombatComponent::SetIsAttackSaved(const bool IsAttackSaved)
 	bIsAttackSaved = IsAttackSaved;
 }
 
+UAnimMontage* UCombatComponent::GetCurrentCombatStateAnimMontage(ECombatState CombatState) const
+{
+	switch (CombatState)
+	{
+	case Idling: break;
+	case Attacking:
+		return MainWeapon->GetAttackMontages()[AttackCount];
+	case HeavyAttacking:
+		return MainWeapon->GetHeavyAttackMontage();
+	case Rolling:
+		return MainWeapon->GetDodgeMontage();
+	case General: break;
+	case Disabled: break;
+	case Dead: break;
+	default: ;
+	}
+	return nullptr;
+}
+
 void UCombatComponent::IncreaseAttackCount()
 {
 	if (AttackCount + 1 >= GetMainWeapon()->GetAttackMontages().Num())

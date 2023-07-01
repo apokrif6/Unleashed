@@ -14,6 +14,7 @@ enum ECombatState
 {
 	Idling UMETA(DisplayName = "Idling"),
 	Attacking UMETA(DisplayName = "Attacking"),
+	HeavyAttacking UMETA(DisplayName = "HeavyAttacking"),
 	Rolling UMETA(DisplayName = "Rolling"),
 	General UMETA(DisplayName = "General"),
 	Disabled UMETA(DisplayName = "Disabled"),

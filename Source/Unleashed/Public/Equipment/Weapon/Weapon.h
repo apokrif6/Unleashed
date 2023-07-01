@@ -31,6 +31,8 @@ public:
 
 	TArray<UAnimMontage*> GetAttackMontages() const { return AttackMontages; }
 
+	UAnimMontage* GetHeavyAttackMontage() const { return HeavyAttackMontage; }
+
 	UAnimMontage* GetDodgeMontage() const { return DodgeMontage; }
 
 	ACombatCollisionComponent* GetCombatCollisionComponent() const { return CombatCollisionComponent; }
@@ -47,6 +49,9 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Animations")
 	TArray<UAnimMontage*> AttackMontages;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Animations")
+	UAnimMontage* HeavyAttackMontage;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Animations")
 	UAnimMontage* DodgeMontage;

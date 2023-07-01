@@ -46,14 +46,19 @@ class AUnleashedCharacter : public ACharacter, public ICombatInterface
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputAction* AttackAction;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UInputAction* HeavyAttackAction;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputAction* RollAction;
 
 	bool bInCombatMode = false;
 
-	void PerformAttack(int32 AttackIndex, bool UseRandomIndex = false);
+	void PerformAttack();
 
+	void PerformHeavyAttack();
+	
 	void PerformRoll();
 
 	const float RollLastMovementVectorTolerance = 0.001f;
@@ -95,6 +100,8 @@ protected:
 	void Interact(const FInputActionValue& Value);
 
 	void Attack(const FInputActionValue& Value);
+
+	void HeavyAttack(const FInputActionValue& Value);
 
 	void Roll(const FInputActionValue& Value);
 

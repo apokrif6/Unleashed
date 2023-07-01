@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Combat/CombatStateEnum.h"
 #include "Components/ActorComponent.h"
 #include "Equipment/Weapon/Weapon.h"
 #include "CombatComponent.generated.h"
@@ -36,6 +37,8 @@ public:
 
 	bool IsAttackSaved() const { return bIsAttackSaved; }
 
+	UAnimMontage* GetCurrentCombatStateAnimMontage(ECombatState CombatState) const;
+	
 private:
 	UPROPERTY()
 	AWeapon* MainWeapon = nullptr;
