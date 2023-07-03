@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "InputActionValue.h"
+#include "Components/AttributesComponent.h"
 #include "Components/CombatComponent.h"
 #include "Components/CombatStateMachineComponent.h"
 #include "Interfaces/CombatInterface.h"
@@ -115,4 +116,7 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Combat")
 	UCombatStateMachineComponent* CombatStateMachineComponent;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Combat")
+	UAttributesComponent* AttributesComponent;
 };

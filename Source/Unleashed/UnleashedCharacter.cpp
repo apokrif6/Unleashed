@@ -54,6 +54,7 @@ AUnleashedCharacter::AUnleashedCharacter()
 	CombatComponent = CreateDefaultSubobject<UCombatComponent>(TEXT("CombatComponent"));
 	CombatStateMachineComponent = CreateDefaultSubobject<UCombatStateMachineComponent>(
 		TEXT("CombatStateMachineComponent"));
+	AttributesComponent = CreateDefaultSubobject<UAttributesComponent>(TEXT("AttributesComponent"));
 }
 
 void AUnleashedCharacter::BeginPlay()
@@ -75,6 +76,8 @@ void AUnleashedCharacter::BeginPlay()
 
 	CombatStateMachineComponent->OnStateBegin.AddDynamic(this, &ThisClass::OnStateBegin);
 	CombatStateMachineComponent->OnStateEnd.AddDynamic(this, &ThisClass::OnStateEnd);
+
+	AttributesComponent->InitializeAttributes();
 }
 
 //////////////////////////////////////////////////////////////////////////
