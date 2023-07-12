@@ -2,11 +2,22 @@
 
 
 #include "Components/AttributesComponent.h"
-
+#include "Unleashed/UnleashedCharacter.h"
 
 UAttributesComponent::UAttributesComponent()
 {
 	PrimaryComponentTick.bCanEverTick = false;
+}
+
+void UAttributesComponent::InitializeAttributes()
+{
+	TArray<TEnumAsByte<ECombatAttribute>> OutKeys;
+	Attributes.GetKeys(OutKeys);
+
+	for (TEnumAsByte<ECombatAttribute> OutKey : OutKeys)
+	{
+		SetCurrentAttributeValue(OutKey, Attributes.Find(OutKey)->BaseValue);
+	}
 }
 
 float UAttributesComponent::GetCurrentAttributeValue(const ECombatAttribute Attribute)
@@ -32,13 +43,24 @@ void UAttributesComponent::SetCurrentAttributeValue(const ECombatAttribute Attri
 	CurrentAttributes.Add(Attribute, Value);
 }
 
-void UAttributesComponent::InitializeAttributes()
+void UAttributesComponent::SetBaseAttributeValue(const ECombatAttribute Attribute, const float BaseValue)
 {
-	TArray<TEnumAsByte<ECombatAttribute>> OutKeys;
-	Attributes.GetKeys(OutKeys);
+	Attributes.Find(Attribute)->BaseValue = BaseValue;
+}
 
-	for (TEnumAsByte<ECombatAttribute> OutKey : OutKeys)
-	{
-		SetCurrentAttributeValue(OutKey, Attributes.Find(OutKey)->BaseValue);
-	}
+void UAttributesComponent::SetMaxAttributeValue(const ECombatAttribute Attribute, const float MaxValue)
+{
+	Attributes.Find(Attribute)->MaxValue = MaxValue;
+}
+
+void UAttributesComponent::TakeDamage(const float Damage)
+{
+	ModifyCurrentAttributeValue(Health, -Damage);
+
+	if (GetCurrentAttributeValue(Health) > 0.0f) return;
+
+	const AUnleashedCharacter* ComponentOwner = Cast<AUnleashedCharacter>(GetOwner());
+	if (!ComponentOwner) return;
+
+	ComponentOwner->GetCombatStateMachineComponent()->SetState(Dead);
 }

@@ -47,7 +47,7 @@ class AUnleashedCharacter : public ACharacter, public ICombatInterface
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputAction* AttackAction;
-	
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputAction* HeavyAttackAction;
 
@@ -59,7 +59,7 @@ class AUnleashedCharacter : public ACharacter, public ICombatInterface
 	void PerformAttack();
 
 	void PerformHeavyAttack();
-	
+
 	void PerformRoll();
 
 	const float RollLastMovementVectorTolerance = 0.001f;
@@ -69,13 +69,24 @@ class AUnleashedCharacter : public ACharacter, public ICombatInterface
 
 	UFUNCTION()
 	void OnStateEnd(ECombatState CombatState);
-	
+
 	UFUNCTION()
-	void OnActorHit(AActor* DamagedActor, float Damage, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser);
-	
+	void OnActorHit(AActor* DamagedActor, float Damage, const class UDamageType* DamageType,
+	                class AController* InstigatedBy, AActor* DamageCauser);
+
+	void OnDeadState();
+
+	FTimerHandle OnDeadTimer;
+
+	UFUNCTION()
+	void OnDeadTimerEnd();
+
 public:
 	AUnleashedCharacter();
 
+	//TODO
+	//should I use it, or replace it with "GetOwner()->GetComponentByClass()
+	//hm...
 	UCombatComponent* GetCombatComponent() const { return CombatComponent; }
 
 	UCombatStateMachineComponent* GetCombatStateMachineComponent() const { return CombatStateMachineComponent; }
@@ -119,4 +130,13 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Combat")
 	UAttributesComponent* AttributesComponent;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Dead")
+	FName RagdollPhysicsBoneName = FName("pelvis");
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Dead")
+	float RagdollPhysicsBlendWeight = 1.0f;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Dead")
+	float DelayBeforeDestroy = 5.0f;
 };

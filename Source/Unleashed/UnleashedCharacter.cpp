@@ -259,6 +259,19 @@ void AUnleashedCharacter::PerformRoll()
 
 void AUnleashedCharacter::OnStateBegin(ECombatState CombatState)
 {
+	switch (CombatState)
+	{
+	case Idling: break;
+	case Attacking: break;
+	case HeavyAttacking: break;
+	case Rolling: break;
+	case General: break;
+	case Disabled: break;
+	case Dead:
+		OnDeadState();
+		break;
+	default: ;
+	}
 }
 
 void AUnleashedCharacter::OnStateEnd(ECombatState CombatState)
@@ -269,6 +282,19 @@ void AUnleashedCharacter::OnActorHit(AActor* DamagedActor, float Damage, const U
                                      AController* InstigatedBy, AActor* DamageCauser)
 {
 	CombatStateMachineComponent->SetState(Disabled);
+
+	AttributesComponent->TakeDamage(Damage);
+}
+
+void AUnleashedCharacter::OnDeadState()
+{
+	GetMesh()->SetCollisionProfileName("Ragdoll");
+	GetMesh()->SetAllBodiesBelowSimulatePhysics(RagdollPhysicsBoneName, true);
+	GetMesh()->SetAllBodiesBelowPhysicsBlendWeight(RagdollPhysicsBoneName, RagdollPhysicsBlendWeight);
+
+	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
+	GetWorld()->GetTimerManager().SetTimer(OnDeadTimer, this, &AUnleashedCharacter::OnDeadTimerEnd, DelayBeforeDestroy);
 }
 
 void AUnleashedCharacter::ContinueCombo()
@@ -300,4 +326,11 @@ void AUnleashedCharacter::ResetCombat()
 	CombatComponent->ResetCombat();
 
 	CombatStateMachineComponent->ResetState();
+}
+
+void AUnleashedCharacter::OnDeadTimerEnd()
+{
+	GetWorld()->GetTimerManager().ClearTimer(OnDeadTimer);
+
+	Destroy();
 }

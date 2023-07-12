@@ -20,15 +20,21 @@ public:
 	float GetCurrentAttributeValue(const ECombatAttribute Attribute);
 
 	void ModifyCurrentAttributeValue(const ECombatAttribute Attribute, const float ModifierValue);
-	
+
 	void InitializeAttributes();
-	
+
+	void SetBaseAttributeValue(const ECombatAttribute Attribute, const float BaseValue);
+
+	void SetMaxAttributeValue(const ECombatAttribute Attribute, const float MaxValue);
+
+	void TakeDamage(const float Damage);
+
 protected:
 	UPROPERTY(EditAnywhere, Category="Attributes")
 	TMap<TEnumAsByte<ECombatAttribute>, FBaseAttribute> Attributes;
 
 private:
 	void SetCurrentAttributeValue(const ECombatAttribute Attribute, const float Value);
-	
+
 	TMap<ECombatAttribute, float> CurrentAttributes;
 };

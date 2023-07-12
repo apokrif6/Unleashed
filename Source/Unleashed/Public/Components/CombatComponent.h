@@ -38,7 +38,7 @@ public:
 	bool IsAttackSaved() const { return bIsAttackSaved; }
 
 	UAnimMontage* GetCurrentCombatStateAnimMontage(ECombatState CombatState) const;
-	
+
 private:
 	UPROPERTY()
 	AWeapon* MainWeapon = nullptr;
