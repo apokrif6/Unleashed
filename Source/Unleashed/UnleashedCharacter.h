@@ -4,15 +4,16 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
-#include "InputActionValue.h"
-#include "Components/AttributesComponent.h"
-#include "Components/CombatComponent.h"
-#include "Components/CombatStateMachineComponent.h"
 #include "Interfaces/CombatInterface.h"
 #include "UnleashedCharacter.generated.h"
 
 
+struct FInputActionValue;
+enum ECombatState : int;
 class UInputAction;
+class UCombatComponent;
+class UCombatStateMachineComponent;
+class UAttributesComponent;
 
 UCLASS(config=Game)
 class AUnleashedCharacter : public ACharacter, public ICombatInterface
@@ -76,11 +77,6 @@ class AUnleashedCharacter : public ACharacter, public ICombatInterface
 
 	void OnDeadState();
 
-	FTimerHandle OnDeadTimer;
-
-	UFUNCTION()
-	void OnDeadTimerEnd();
-
 public:
 	AUnleashedCharacter();
 
@@ -90,6 +86,8 @@ public:
 	UCombatComponent* GetCombatComponent() const { return CombatComponent; }
 
 	UCombatStateMachineComponent* GetCombatStateMachineComponent() const { return CombatStateMachineComponent; }
+
+	UAttributesComponent* GetAttributesComponent() const { return AttributesComponent; }
 
 	/** Returns CameraBoom subobject **/
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
@@ -138,5 +136,5 @@ protected:
 	float RagdollPhysicsBlendWeight = 1.0f;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Dead")
-	float DelayBeforeDestroy = 5.0f;
+	float DeathDelay = 5.0f;
 };

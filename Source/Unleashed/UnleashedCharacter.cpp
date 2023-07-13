@@ -9,6 +9,9 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
+#include "Components/AttributesComponent.h"
+#include "Components/CombatComponent.h"
+#include "Components/CombatStateMachineComponent.h"
 #include "Interfaces/InteractInterface.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Kismet/KismetSystemLibrary.h"
@@ -193,6 +196,10 @@ void AUnleashedCharacter::Attack(const FInputActionValue& Value)
 	if (CombatStateMachineComponent->IsStateEqualsToAnyOf(TArray{HeavyAttacking, Rolling, General, Disabled, Dead}))
 		return;
 
+	if (AttributesComponent->GetCurrentAttributeValue(Stamina) < CombatComponent->GetMainWeapon()->
+		GetStaminaUsageForCombatState(Attacking))
+		return;
+
 	if (CombatStateMachineComponent->GetState() == Attacking)
 	{
 		CombatComponent->SetIsAttackSaved(true);
@@ -212,6 +219,10 @@ void AUnleashedCharacter::HeavyAttack(const FInputActionValue& Value)
 	}))
 		return;
 
+	if (AttributesComponent->GetCurrentAttributeValue(Stamina) < CombatComponent->GetMainWeapon()->
+		GetStaminaUsageForCombatState(HeavyAttacking))
+		return;
+
 	PerformHeavyAttack();
 }
 
@@ -220,6 +231,10 @@ void AUnleashedCharacter::Roll(const FInputActionValue& Value)
 	if (!CombatComponent->GetMainWeapon()) return;
 
 	if (CombatStateMachineComponent->IsStateEqualsToAnyOf(TArray{Rolling, General, Disabled, Dead})) return;
+
+	if (AttributesComponent->GetCurrentAttributeValue(Stamina) < CombatComponent->GetMainWeapon()->
+		GetStaminaUsageForCombatState(Rolling))
+		return;
 
 	PerformRoll();
 }
@@ -235,6 +250,9 @@ void AUnleashedCharacter::PerformAttack()
 	PlayAnimMontage(AttackMontage);
 
 	CombatComponent->IncreaseAttackCount();
+
+	AttributesComponent->ModifyCurrentAttributeValue(
+		Stamina, -CombatComponent->GetMainWeapon()->GetStaminaUsageForCombatState(Attacking));
 }
 
 void AUnleashedCharacter::PerformHeavyAttack()
@@ -246,6 +264,9 @@ void AUnleashedCharacter::PerformHeavyAttack()
 	CombatStateMachineComponent->SetState(HeavyAttacking);
 
 	PlayAnimMontage(HeavyAttackMontage);
+
+	AttributesComponent->ModifyCurrentAttributeValue(
+		Stamina, -CombatComponent->GetMainWeapon()->GetStaminaUsageForCombatState(HeavyAttacking));
 }
 
 void AUnleashedCharacter::PerformRoll()
@@ -255,6 +276,9 @@ void AUnleashedCharacter::PerformRoll()
 	CombatStateMachineComponent->SetState(Rolling);
 
 	PlayAnimMontage(DodgeAnimMontage);
+
+	AttributesComponent->ModifyCurrentAttributeValue(
+		Stamina, -CombatComponent->GetMainWeapon()->GetStaminaUsageForCombatState(Rolling));
 }
 
 void AUnleashedCharacter::OnStateBegin(ECombatState CombatState)
@@ -294,12 +318,14 @@ void AUnleashedCharacter::OnDeadState()
 
 	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
-	GetWorld()->GetTimerManager().SetTimer(OnDeadTimer, this, &AUnleashedCharacter::OnDeadTimerEnd, DelayBeforeDestroy);
+	SetLifeSpan(DeathDelay);
 }
 
 void AUnleashedCharacter::ContinueCombo()
 {
-	if (CombatComponent->IsAttackSaved())
+	if (CombatComponent->IsAttackSaved() &&
+		AttributesComponent->GetCurrentAttributeValue(Stamina) >= CombatComponent->GetMainWeapon()->
+		GetStaminaUsageForCombatState(Attacking))
 	{
 		CombatComponent->SetIsAttackSaved(false);
 
@@ -326,11 +352,4 @@ void AUnleashedCharacter::ResetCombat()
 	CombatComponent->ResetCombat();
 
 	CombatStateMachineComponent->ResetState();
-}
-
-void AUnleashedCharacter::OnDeadTimerEnd()
-{
-	GetWorld()->GetTimerManager().ClearTimer(OnDeadTimer);
-
-	Destroy();
 }

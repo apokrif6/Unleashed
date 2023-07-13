@@ -2,6 +2,7 @@
 
 
 #include "Equipment/Weapon/Weapon.h"
+#include "Components/CombatComponent.h"
 #include "Interfaces/AnimInstanceInterface.h"
 #include "Kismet/GameplayStatics.h"
 #include "Unleashed/UnleashedCharacter.h"
@@ -17,6 +18,14 @@ void AWeapon::BeginPlay()
 	Super::BeginPlay();
 
 	CombatCollisionComponent->OnActorHit.AddDynamic(this, &ThisClass::OnActorHit);
+}
+
+float AWeapon::GetStaminaUsageForCombatState(ECombatState CombatState) const
+{
+	const float* Stamina = StaminaUsage.Find(CombatState);
+	if (!Stamina) return 0.f;
+
+	return *Stamina;
 }
 
 void AWeapon::Equip()

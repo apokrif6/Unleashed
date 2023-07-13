@@ -2,6 +2,7 @@
 
 
 #include "AnimNotifies/AttachWeaponNotify.h"
+#include "Components/CombatComponent.h"
 #include "Unleashed/UnleashedCharacter.h"
 
 void UAttachWeaponNotify::Notify(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation,

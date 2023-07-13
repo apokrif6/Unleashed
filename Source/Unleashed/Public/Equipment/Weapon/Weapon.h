@@ -8,6 +8,7 @@
 #include "Equipment/Equipment.h"
 #include "Weapon.generated.h"
 
+enum ECombatState : int;
 /**
  * 
  */
@@ -37,6 +38,8 @@ public:
 
 	ACombatCollisionComponent* GetCombatCollisionComponent() const { return CombatCollisionComponent; }
 
+	float GetStaminaUsageForCombatState(ECombatState CombatState) const;
+
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Attachments")
 	FName HandAttachSocketName = NAME_None;
@@ -61,6 +64,9 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Combat")
 	float Damage = 30.f;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Combat")
+	TMap<TEnumAsByte<ECombatState>, float> StaminaUsage;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Combat")
 	USoundBase* HitSound;

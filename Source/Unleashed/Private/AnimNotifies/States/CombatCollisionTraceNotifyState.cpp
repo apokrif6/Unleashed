@@ -2,6 +2,7 @@
 
 
 #include "AnimNotifies/States/CombatCollisionTraceNotifyState.h"
+#include "Components/CombatComponent.h"
 #include "Unleashed/UnleashedCharacter.h"
 
 void UCombatCollisionTraceNotifyState::NotifyBegin(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation,
