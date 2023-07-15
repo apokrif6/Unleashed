@@ -88,7 +88,6 @@ void UAttributesComponent::RegenerateCurrentAttributeValue(const ECombatAttribut
 		GetWorld()->GetTimerManager().SetTimer(RegenerateAttributeValueTimer, this, &ThisClass::RegenerateStamina,
 		                                       StaminaRegenerateRate, true);
 		break;
-	case Armor: break;
 	default: ;
 	}
 }

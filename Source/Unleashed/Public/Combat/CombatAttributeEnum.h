@@ -15,5 +15,4 @@ enum ECombatAttribute
 	NoneAttribute UMETA(DisplayName = "NoneAttribute"),
 	Health UMETA(DisplayName = "Health"),
 	Stamina UMETA(DisplayName = "Stamina"),
-	Armor UMETA(DisplayName = "Armor"),
 };

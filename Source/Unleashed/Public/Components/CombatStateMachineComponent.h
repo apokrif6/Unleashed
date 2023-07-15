@@ -8,6 +8,7 @@
 #include "CombatStateMachineComponent.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnStateBegin, ECombatState, CombatState);
+
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnStateEnd, ECombatState, CombatState);
 
 
@@ -21,6 +22,7 @@ public:
 
 	void SetState(ECombatState CombatState);
 
+	UFUNCTION(BlueprintCallable)
 	ECombatState GetState() const { return State; }
 
 	void ResetState();
@@ -28,9 +30,9 @@ public:
 	bool IsStateEqualsToAnyOf(const TArray<ECombatState>& CombatStates) const;
 
 	FOnStateBegin OnStateBegin;
-	
+
 	FOnStateEnd OnStateEnd;
-	
+
 private:
 	ECombatState State = Idling;
 };
