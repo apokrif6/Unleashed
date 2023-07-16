@@ -14,6 +14,10 @@
 
 ![Combo 2](https://github.com/apokrif6/apokrif6.github.io/blob/main/assets/github/unleashed_combo_2.gif)
 
+<h2>Stamina usage</h2>
+
+![Stamina](https://github.com/apokrif6/apokrif6.github.io/blob/main/assets/github/unleashed_stamina.gif)
+
 <h2>Anim montage preview</h2>
 
 ![Notifies](https://github.com/apokrif6/apokrif6.github.io/blob/main/assets/github/unleashed_notifies.gif)
